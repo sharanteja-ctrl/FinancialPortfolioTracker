@@ -1,0 +1,6 @@
+Symbol,Name,AssetType,Sector,Quantity,PurchasePrice,PurchaseDate,Notes
+AAPL,Apple Inc.,Stock,Technology,10,130.00,2023-01-03,Core tech holding
+MSFT,Microsoft Corp.,Stock,Technology,8,242.00,2023-01-04,Cloud/AI play
+GOOGL,Alphabet Inc.,Stock,Technology,15,89.00,2023-01-03,Search & Cloud
+AMZN,Amazon.com Inc.,Stock,Consumer Discretionary,5,85.00,2023-01-03,E-commerce & AWS
+SPY,SPDR S&P 500 ETF,ETF,Broad Market,20,383.00,2023-01-04,Index benchmark

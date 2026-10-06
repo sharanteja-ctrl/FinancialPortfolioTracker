@@ -1,0 +1,20 @@
+## .NET & Visual Studio
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+.idea/
+
+## Database & Models
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+Models/*.zip
+
+## Logs & Temp
+*.log
+.DS_Store

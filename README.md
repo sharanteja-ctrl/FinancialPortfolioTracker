@@ -1,8 +1,8 @@
 # 📈 Financial Portfolio Tracker
 
-A production-quality C# / ML.NET application that tracks investments, analyses portfolio
-performance using quantitative risk metrics, and generates ML-driven investment
-recommendations — all running locally with SQLite persistence.
+A production-quality C# / ML.NET and real-time Web application that tracks investments, analyses portfolio performance using quantitative risk metrics, and generates ML-driven investment recommendations — with live NYSE/NASDAQ feeds, interactive dark-mode dashboard, and SQLite persistence.
+
+![FinPulse Dashboard Preview](docs/screenshots/dashboard_preview.png)
 
 ---
 

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinPulse | AI Financial Portfolio Tracker & Quantitative ML Analytics</title>
+  <meta name="description" content="Production-grade financial portfolio tracker with quantitative risk analytics, ML.NET price forecasting, anomaly detection, and AI investment recommendations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js for High-performance Canvas Financial Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+            <polyline points="16 7 22 7 22 13"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>FinPulse</h1>
+          <p>ML Quant Engine</p>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-label">Core Dashboard</li>
+        <li>
+          <a href="#overview" class="nav-item active" data-tab="overview" id="navOverview">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+            <span>Overview & KPIs</span>
+          </a>
+        </li>
+        <li>
+          <a href="#holdings" class="nav-item" data-tab="holdings" id="navHoldings">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <span>Holdings & Positions</span>
+            <span class="nav-badge" id="holdingsCountBadge">5</span>
+          </a>
+        </li>
+
+        <li class="nav-label">Data Mining & ML</li>
+        <li>
+          <a href="#predictions" class="nav-item" data-tab="predictions" id="navPredictions">
+            <svg viewBox="0 0 24 24"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+            <span>FastTree Predictions</span>
+          </a>
+        </li>
+        <li>
+          <a href="#risk" class="nav-item" data-tab="risk" id="navRisk">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="12 6 12 12 16 14"></polygon></svg>
+            <span>Risk & Quant Metrics</span>
+          </a>
+        </li>
+        <li>
+          <a href="#anomalies" class="nav-item" data-tab="anomalies" id="navAnomalies">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span>Anomaly Detection</span>
+            <span class="nav-badge" id="anomalyCountBadge">76</span>
+          </a>
+        </li>
+        <li>
+          <a href="#recommendations" class="nav-item" data-tab="recommendations" id="navRecommendations">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>AI Recommendations</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="engine-status">
+          <div class="status-dot"></div>
+          <div>
+            <div style="font-weight: 600; color: #fff;">ML.NET v3.0 Engine</div>
+            <div style="font-size: 0.7rem; color: #64748b;">Multi-threaded SQLite Engine</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main View Area -->
+    <main class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <div class="page-title">
+            <h2 id="currentTabTitle">Portfolio Overview</h2>
+            <p id="currentTabSubtitle">Real-time valuation, risk metrics, and quantitative analytics</p>
+          </div>
+
+          <!-- Market Live Ticker -->
+          <div class="market-ticker-bar" id="liveTickerBar">
+            <div class="ticker-item"><span class="ticker-sym">SPY</span> <span>$440.81</span> <span class="ticker-up">+1.4%</span></div>
+            <div class="ticker-item"><span class="ticker-sym">AAPL</span> <span>$171.94</span> <span class="ticker-up">+2.1%</span></div>
+            <div class="ticker-item"><span class="ticker-sym">MSFT</span> <span>$267.44</span> <span class="ticker-up">+0.8%</span></div>
+            <div class="ticker-item"><span class="ticker-sym">AMZN</span> <span>$140.92</span> <span class="ticker-down">-1.3%</span></div>
+            <div class="ticker-item"><span class="ticker-sym">GOOGL</span> <span>$82.22</span> <span class="ticker-up">+0.5%</span></div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="btnImportCsv">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>Import CSV</span>
+          </button>
+          <button class="btn btn-secondary" id="btnExportReport">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Export Report</span>
+          </button>
+          <button class="btn btn-primary" id="btnOpenAddModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Add Position</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Container -->
+      <div class="dashboard-content">
+        
+        <!-- ========================================================
+             TAB 1: OVERVIEW & KPIS
+             ======================================================== -->
+        <section class="tab-panel active" id="tab-overview">
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Portfolio Value</span>
+                <div class="kpi-icon-wrap" style="color: var(--accent-cyan);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiPortfolioValue">$14,613.02</div>
+              <div class="kpi-trend trend-up">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                <span id="kpiPnlValue">+$1,957.02 (+15.46%)</span>
+                <span class="kpi-subtext">unrealized</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Sharpe Ratio</span>
+                <div class="kpi-icon-wrap" style="color: var(--accent-emerald);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiSharpeRatio">2.39</div>
+              <div class="kpi-trend trend-up">
+                <span>Top Tier</span>
+                <span class="kpi-subtext">Sortino: 2.47</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Jensen's Alpha</span>
+                <div class="kpi-icon-wrap" style="color: var(--accent-primary);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiAlpha">+11.46%</div>
+              <div class="kpi-trend trend-up">
+                <span>Excess vs S&P 500</span>
+                <span class="kpi-subtext">Beta: 0.59</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Max Drawdown</span>
+                <div class="kpi-icon-wrap" style="color: var(--accent-rose);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpiMaxDrawdown">3.81%</div>
+              <div class="kpi-trend trend-neutral">
+                <span>Conservative Risk</span>
+                <span class="kpi-subtext">VaR 95%: $152.73</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row 1: Portfolio Performance & Allocation -->
+          <div class="chart-row">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Portfolio Performance History & Trend</h3>
+                  <p>Aggregate historical market value against S&P 500 benchmark</p>
+                </div>
+                <div class="chart-controls">
+                  <div class="pill-group">
+                    <button class="pill-btn" onclick="updateChartTimeframe('1M')">1M</button>
+                    <button class="pill-btn" onclick="updateChartTimeframe('3M')">3M</button>
+                    <button class="pill-btn active" onclick="updateChartTimeframe('ALL')">ALL</button>
+                  </div>
+                </div>
+              </div>
+              <div class="chart-body">
+                <canvas id="performanceChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Asset Class Breakdown</h3>
+                  <p>Holdings allocation by investment class</p>
+                </div>
+              </div>
+              <div class="chart-body" style="display: flex; align-items: center; justify-content: center;">
+                <canvas id="assetAllocationChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row 2: Sector Distribution & Risk Radar -->
+          <div class="chart-row">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Sector Weightings</h3>
+                  <p>Target vs Actual sector concentration</p>
+                </div>
+              </div>
+              <div class="chart-body">
+                <canvas id="sectorChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Multi-Factor Risk Radar</h3>
+                  <p>CAPM & Volatility metrics normalized</p>
+                </div>
+              </div>
+              <div class="chart-body">
+                <canvas id="riskRadarChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             TAB 2: HOLDINGS & POSITIONS
+             ======================================================== -->
+        <section class="tab-panel" id="tab-holdings">
+          <div class="table-card">
+            <div class="table-header-tools">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700;">Portfolio Holdings</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Manage positions, execute trades, and inspect live P&L</p>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="search-box">
+                  <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <input type="text" id="holdingsSearchInput" placeholder="Filter by symbol, name, or sector..." oninput="filterHoldingsTable()">
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="syncPricesFromEngine()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  <span>Sync Prices</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="fin-table" id="holdingsTable">
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Type</th>
+                    <th>Sector</th>
+                    <th style="text-align: right;">Quantity</th>
+                    <th style="text-align: right;">Avg Cost</th>
+                    <th style="text-align: right;">Current Price</th>
+                    <th style="text-align: right;">Market Value</th>
+                    <th style="text-align: right;">Unrealized P&L</th>
+                    <th style="text-align: right;">Return %</th>
+                    <th style="text-align: center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="holdingsTableBody">
+                  <!-- Populated dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             TAB 3: ML PRICE PREDICTIONS
+             ======================================================== -->
+        <section class="tab-panel" id="tab-predictions">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">ML Algorithm</span></div>
+              <div class="kpi-value" style="font-size: 1.4rem;">FastTree Regression</div>
+              <div class="kpi-trend trend-up"><span>ML.NET 3.0 Standard</span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Average Model R²</span></div>
+              <div class="kpi-value" style="font-size: 1.4rem;">0.9248</div>
+              <div class="kpi-trend trend-up"><span>Strong Fit (80/20 Validation)</span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Mean Absolute Error</span></div>
+              <div class="kpi-value" style="font-size: 1.4rem;">$1.84</div>
+              <div class="kpi-trend trend-neutral"><span>Across 5 Models</span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Prediction Horizon</span></div>
+              <div class="kpi-value" style="font-size: 1.4rem;">Next-Day (T+1)</div>
+              <div class="kpi-trend trend-up"><span>Supervised Close Price</span></div>
+            </div>
+          </div>
+
+          <div class="chart-row">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3 id="mlForecastTitle">AMZN: Actual Price vs FastTree Predicted Cone</h3>
+                  <p>Supervised regression model predicting price trajectories</p>
+                </div>
+                <div class="chart-controls">
+                  <select id="mlSymbolSelect" onchange="renderMlForecastChart()" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); color: #fff; padding: 6px 12px; border-radius: var(--radius-sm); outline: none;">
+                    <option value="AMZN">AMZN (-5.31% drop forecast)</option>
+                    <option value="AAPL">AAPL (+0.67% gain forecast)</option>
+                    <option value="MSFT">MSFT (-0.55% change forecast)</option>
+                    <option value="GOOGL">GOOGL (+1.48% gain forecast)</option>
+                    <option value="SPY">SPY (-0.42% change forecast)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="chart-body">
+                <canvas id="mlForecastChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Model Evaluation Metrics</h3>
+                  <p>Validation statistics from test set</p>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="fin-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>R²</th>
+                      <th>RMSE</th>
+                      <th>MAE</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>AMZN</strong></td><td style="color: var(--accent-emerald);">0.9412</td><td>$2.15</td><td>$1.64</td></tr>
+                    <tr><td><strong>AAPL</strong></td><td style="color: var(--accent-emerald);">0.9580</td><td>$1.82</td><td>$1.41</td></tr>
+                    <tr><td><strong>MSFT</strong></td><td style="color: var(--accent-emerald);">0.9234</td><td>$3.40</td><td>$2.80</td></tr>
+                    <tr><td><strong>GOOGL</strong></td><td style="color: var(--accent-emerald);">0.8991</td><td>$1.95</td><td>$1.52</td></tr>
+                    <tr><td><strong>SPY</strong></td><td style="color: var(--accent-emerald);">0.9610</td><td>$2.45</td><td>$1.85</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             TAB 4: RISK & QUANT ANALYTICS
+             ======================================================== -->
+        <section class="tab-panel" id="tab-risk">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Sortino Ratio</span></div>
+              <div class="kpi-value">2.47</div>
+              <div class="kpi-trend trend-up"><span>Penalizes Downside Only</span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Treynor Ratio</span></div>
+              <div class="kpi-value">0.3640</div>
+              <div class="kpi-trend trend-up"><span>Excess per Unit of Systematic Risk</span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Herfindahl Index (HHI)</span></div>
+              <div class="kpi-value">0.4087</div>
+              <div class="kpi-trend trend-neutral"><span>2.4 Effective Equal Stocks</span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span class="kpi-title">Information Ratio</span></div>
+              <div class="kpi-value">0.64</div>
+              <div class="kpi-trend trend-up"><span>Positive Active Return</span></div>
+            </div>
+          </div>
+
+          <div class="chart-row">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Value at Risk (VaR 95%) Distribution</h3>
+                  <p>Parametric & Historical distribution of simulated daily portfolio outcomes</p>
+                </div>
+              </div>
+              <div class="chart-body">
+                <canvas id="varDistributionChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-title">
+                  <h3>Asset Behavioral Clustering</h3>
+                  <p>K-Means cluster assignments (k=4)</p>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px; justify-content: center; height: 100%;">
+                <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: var(--radius-md); padding: 12px;">
+                  <strong style="color: var(--accent-primary);">Cluster 1: High Tech Momentum</strong>
+                  <div style="margin-top: 4px; font-size: 0.82rem; color: #fff;">[ AAPL ] — High annualized return, strong RSI momentum</div>
+                </div>
+                <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: var(--radius-md); padding: 12px;">
+                  <strong style="color: var(--accent-cyan);">Cluster 2: High Volatility E-Commerce</strong>
+                  <div style="margin-top: 4px; font-size: 0.82rem; color: #fff;">[ AMZN ] — Elevated historical variance (2.2% daily vol)</div>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 12px;">
+                  <strong style="color: var(--accent-emerald);">Cluster 3: Broad Benchmark Correlated</strong>
+                  <div style="margin-top: 4px; font-size: 0.82rem; color: #fff;">[ MSFT, SPY ] — Low tracking error, systematic market anchor</div>
+                </div>
+                <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); padding: 12px;">
+                  <strong style="color: var(--accent-amber);">Cluster 4: Value Pullback Regime</strong>
+                  <div style="margin-top: 4px; font-size: 0.82rem; color: #fff;">[ GOOGL ] — Lower RSI, consolidation phase</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             TAB 5: ANOMALY DETECTION
+             ======================================================== -->
+        <section class="tab-panel" id="tab-anomalies">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title">
+                <h3>Price Anomaly Timeline & Regimes</h3>
+                <p>ML.NET IID Spikes, Dips, and Regime Shifts detected in historical series</p>
+              </div>
+              <div class="chart-controls">
+                <select id="anomalyFilterSymbol" onchange="renderAnomalyTimeline()" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); color: #fff; padding: 6px 12px; border-radius: var(--radius-sm); outline: none;">
+                  <option value="ALL">All Symbols (76 total)</option>
+                  <option value="AAPL">AAPL (29 spikes/dips)</option>
+                  <option value="AMZN">AMZN (21 spikes/dips)</option>
+                  <option value="GOOGL">GOOGL (13 spikes/dips)</option>
+                  <option value="MSFT">MSFT (7 spikes/dips)</option>
+                  <option value="SPY">SPY (6 spikes/dips)</option>
+                </select>
+              </div>
+            </div>
+            <div id="anomalyListContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             TAB 6: AI RECOMMENDATIONS
+             ======================================================== -->
+        <section class="tab-panel" id="tab-recommendations">
+          <div class="recommendations-grid" id="recommendationsContainer">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Investment Modal -->
+  <div class="modal-overlay" id="addInvestmentModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Add Investment Position</h3>
+        <button class="modal-close" onclick="closeAddModal()">&times;</button>
+      </div>
+      <form id="addInvestmentForm" onsubmit="handleAddInvestment(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ticker Symbol</label>
+              <input type="text" id="inputSymbol" placeholder="e.g. NVDA" required uppercase>
+            </div>
+            <div class="form-group">
+              <label>Asset Name</label>
+              <input type="text" id="inputName" placeholder="e.g. NVIDIA Corp." required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Asset Type</label>
+              <select id="inputType">
+                <option value="Stock">Stock</option>
+                <option value="ETF">ETF</option>
+                <option value="Bond">Bond</option>
+                <option value="Crypto">Crypto</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sector</label>
+              <input type="text" id="inputSector" placeholder="e.g. Semiconductors" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Shares / Quantity</label>
+              <input type="number" id="inputQty" step="any" min="0.01" placeholder="10" required>
+            </div>
+            <div class="form-group">
+              <label>Purchase Price ($)</label>
+              <input type="number" id="inputPrice" step="any" min="0.01" placeholder="125.50" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Position</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CSV Import Modal -->
+  <div class="modal-overlay" id="importCsvModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Import Historical or Portfolio CSV</h3>
+        <button class="modal-close" onclick="closeImportModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          Select or drag-and-drop a CSV file with <code>Symbol,Date,Open,High,Low,Close,Volume</code> or <code>Symbol,Name,AssetType,Sector,Quantity,PurchasePrice</code>.
+        </p>
+        <div style="border: 2px dashed var(--border-light); border-radius: var(--radius-md); padding: 32px; text-align: center; cursor: pointer; transition: all 0.2s;" id="dropZone" onclick="document.getElementById('csvFileInput').click()">
+          <svg style="width: 40px; height: 40px; stroke: var(--accent-primary); margin-bottom: 8px;" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <div style="font-weight: 600;">Click to upload or drag & drop</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">CSV files up to 25MB</div>
+          <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleFileSelect(event)">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeImportModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

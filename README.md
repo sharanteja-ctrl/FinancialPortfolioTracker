@@ -2,6 +2,8 @@
 
 A production-quality C# / ML.NET and real-time Web application that tracks investments, analyses portfolio performance using quantitative risk metrics, and generates ML-driven investment recommendations — with live NYSE/NASDAQ feeds, interactive dark-mode dashboard, and SQLite persistence.
 
+🚀 **[Live Web Dashboard](https://sharanteja-ctrl.github.io/FinancialPortfolioTracker/)**
+
 ![FinPulse Dashboard Preview](docs/screenshots/dashboard_preview.png)
 
 ---
